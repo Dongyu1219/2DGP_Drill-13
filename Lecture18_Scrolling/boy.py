@@ -222,8 +222,8 @@ class Boy:
         # self.y = clamp(25.0, self.y, get_canvas_height()-25.0)
 
         #월드 좌표 관점의 상하좌우 제한
-        # self.x = clamp(25.0, self.x, server.background.w - 25.0)
-        # self.y = clamp(25.0, self.y, server.background.h - 25.0)
+        self.x = clamp(25.0, self.x, server.background.w - 25.0)
+        self.y = clamp(25.0, self.y, server.background.h - 25.0)
 
     def handle_event(self, event):
         self.state_machine.handle_event(('INPUT', event))
@@ -232,20 +232,24 @@ class Boy:
         #sx, sy = get_canvas_width()/2, get_canvas_height()/2
 
         #월드좌표계를 화면 좌표계로 변환
-        # sx = self.x - server.background.window_left
-        # sy = self.y - server.background.window_bottom
-        #
-        # self.image.clip_draw(int(self.frame) * 100, self.action * 100, 100, 100, sx, sy)
+        sx = self.x - server.background.window_left
+        sy = self.y - server.background.window_bottom
 
-        #다시 무한 스크롤링
-        sx, sy = get_canvas_width() // 2, get_canvas_height() // 2
         self.image.clip_draw(int(self.frame) * 100, self.action * 100, 100, 100, sx, sy)
 
-        self.font.draw(int(sx - 100), int(sy + 60), f'({self.x:5.5}, {self.y:5.5})', (255, 255, 0))
+        draw_rectangle(*self.get_bb())
+
+        #다시 무한 스크롤링
+        # sx, sy = get_canvas_width() // 2, get_canvas_height() // 2
+        # self.image.clip_draw(int(self.frame) * 100, self.action * 100, 100, 100, sx, sy)
+        #
+        # self.font.draw(int(sx - 100), int(sy + 60), f'({self.x:5.5}, {self.y:5.5})', (255, 255, 0))
 
 
     def get_bb(self):
-        return self.x - 20, self.y - 50, self.x + 20, self.y + 50
+        sx = self.x - server.background.window_left
+        sy = self.y - server.background.window_bottom
+        return sx - 20, sy - 50, sx + 20, sy + 50
 
     def handle_collision(self, group, other):
         pass
